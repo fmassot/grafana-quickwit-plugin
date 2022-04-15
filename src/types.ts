@@ -3,7 +3,7 @@ import {DataQuery, DataSourceJsonData} from '@grafana/data';
 export interface MyQuery extends DataQuery {
   query?: string;
   sort_by_field: string;
-  aggregation?: any;
+  aggregations?: any;
 }
 
 export const defaultQuery: Partial<MyQuery> = {

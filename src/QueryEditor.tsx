@@ -21,35 +21,52 @@ export class QueryEditor extends PureComponent<Props> {
     onChange({...query, sort_by_field: event.target.value});
     onRunQuery();
   };
-  onAggregationChange = (event: ChangeEvent<HTMLInputElement>) => {
+  onAggregationsChange = (event: ChangeEvent<HTMLInputElement>) => {
     const {onChange, query, onRunQuery} = this.props;
-    onChange({...query, aggregation: event.target.value});
+    onChange({...query, aggregations: event.target.value});
     onRunQuery();
   };
 
   render() {
     const myQuery = defaults(this.props.query, defaultQuery);
-    const {query, sort_by_field: sort_by_field, aggregation} = myQuery;
-    const aggregationExample = "Enter a json. Example: {\n" +
-        "      \"range_buckets\": {\n" +
-        "        \"range\": {\n" +
-        "          \"field\": \"ts\",\n" +
-        "          \"ranges\": [ { \"to\": 2f64 }, { \"from\": 2f64, \"to\": 5f64 }, { \"from\": 5f64, \"to\": 9f64 }, { \"from\": 9f64 } ]\n" +
-        "        },\n" +
-        "        \"aggs\": {\n" +
-        "          \"average_ts\": {\n" +
-        "            \"avg\": { \"field\": \"ts\" }\n" +
-        "          }\n" +
-        "        }\n" +
-        "      }\n" +
-        "    }"
+    const {query, sort_by_field: sort_by_field, aggregations: aggregations} = myQuery;
+    const aggregationExample =
+        'Enter a json. Example:{\n' +
+        '    "timestamp_blocks": {\n' +
+        '      "range": {\n' +
+        '        "field": "timestamp",\n' +
+        '        "ranges": [\n' +
+        '          {\n' +
+        '            "to": 1500059649\n' +
+        '          },\n' +
+        '          {\n' +
+        '            "from": 1500059649,\n' +
+        '            "to": 1501159649\n' +
+        '          },\n' +
+        '          {\n' +
+        '            "from": 1501159649\n' +
+        '          }\n' +
+        '        ]\n' +
+        '      },\n' +
+        '      "aggs": {\n' +
+        '        "average_in_range": {\n' +
+        '          "avg": {\n' +
+        '            "field": "timestamp"\n' +
+        '          }\n' +
+        '        }\n' +
+        '      }\n';
 
     return (
         <div className="gf-form">
           <FormField labelWidth={8} value={query || ''} onChange={this.onQueryChange} label="Query text"/>
           <FormField labelWidth={7} value={sort_by_field || ''} onChange={this.onSortByFieldChange} label="Sort by"/>
-          <FormField labelWidth={7} value={aggregation || ''} onChange={this.onAggregationChange} label="Aggregation"
-                     tooltip={aggregationExample}/>
+          <FormField
+              labelWidth={7}
+              value={aggregations || ''}
+              onChange={this.onAggregationsChange}
+              label="Aggregations"
+              tooltip={aggregationExample}
+          />
         </div>
     );
   }

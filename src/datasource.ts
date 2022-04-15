@@ -15,7 +15,7 @@ export class DataSource extends DataSourceApi<MyQuery, MyDataSourceOptions> {
     super(instanceSettings);
 
     this.index = instanceSettings.jsonData.index || 1000.0;
-    console.log(instanceSettings)
+    console.log(instanceSettings);
   }
 
   async query(options: DataQueryRequest<MyQuery>): Promise<DataQueryResponse> {
@@ -42,15 +42,21 @@ export class DataSource extends DataSourceApi<MyQuery, MyDataSourceOptions> {
   }
 
   async doRequest(query: MyQuery) {
+    let data: any = {query: query.query, sort_by_field: query.sort_by_field, max_hits: 1};
+    data = Object.fromEntries(Object.entries(data).filter(([_, v]) => v != null && v != ''));
+    if (query.aggregations != '') {
+      data.aggregations = JSON.parse(query.aggregations);
+    }
+    console.log(data);
+
     const result = await getBackendSrv().datasourceRequest({
       method: 'POST',
       url: `http://127.0.0.1:7280/api/v1/${this.index}/search`,
-      data: {query: query.query, sort_by_field: query.sort_by_field, max_hits: 1000},
+      data: data,
       headers: {'Content-type': 'application/json'},
     });
     return result;
   }
-
 
   async testDatasource() {
     // Implement a health check for your data source.
