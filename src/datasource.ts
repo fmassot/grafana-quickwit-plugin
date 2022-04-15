@@ -15,40 +15,9 @@ export class DataSource extends DataSourceApi<MyQuery, MyDataSourceOptions> {
     super(instanceSettings);
 
     this.index = instanceSettings.jsonData.index || 1000.0;
+    console.log(instanceSettings)
   }
 
-  //
-  // async query(options: DataQueryRequest<MyQuery>): Promise<DataQueryResponse> {
-  //   const {range} = options;
-  //   const from = range!.from.valueOf();
-  //   const to = range!.to.valueOf();
-  //
-  //   const data = options.targets.map((target) => {
-  //     const query = defaults(target, defaultQuery);
-  //
-  //     const frame = new MutableDataFrame({
-  //       refId: query.refId,
-  //       fields: [
-  //         {name: 'time', type: FieldType.time},
-  //         {name: 'value', type: FieldType.number},
-  //       ],
-  //     });
-  //
-  //     // duration of the time range, in milliseconds.
-  //     const duration = to - from;
-  //
-  //     // step determines how close in time (ms) the points will be to each other.
-  //     const step = duration / 1000;
-  //
-  //     for (let t = 0; t < duration; t += step) {
-  //       frame.add({time: from + t, value: Math.sin((2 * Math.PI * t) / duration)});
-  //     }
-  //
-  //     return frame;
-  //   });
-  //
-  //   return {data};
-  // }
   async query(options: DataQueryRequest<MyQuery>): Promise<DataQueryResponse> {
     const promises = options.targets.map((query) =>
         this.doRequest(query).then((response) => {
@@ -62,7 +31,6 @@ export class DataSource extends DataSourceApi<MyQuery, MyDataSourceOptions> {
 
           console.log('toto', response);
           response.data.hits.forEach((point: any) => {
-            console.log('hihi', point.timestamp[0], point.tenant_id[0]);
             frame.appendRow([point.timestamp[0], point.tenant_id[0]]);
           });
 
@@ -74,16 +42,15 @@ export class DataSource extends DataSourceApi<MyQuery, MyDataSourceOptions> {
   }
 
   async doRequest(query: MyQuery) {
-    console.log(query)
     const result = await getBackendSrv().datasourceRequest({
-      method: 'GET',
+      method: 'POST',
       url: `http://127.0.0.1:7280/api/v1/${this.index}/search`,
-      params: {'query': query.query, 'sortByField': query.sortByField},
-      headers: {'Access-Control-Allow-Origin': '*', 'Referrer-Policy': 'no-referrer'},
+      data: {query: query.query, sort_by_field: query.sort_by_field, max_hits: 1000},
+      headers: {'Content-type': 'application/json'},
     });
-
     return result;
   }
+
 
   async testDatasource() {
     // Implement a health check for your data source.

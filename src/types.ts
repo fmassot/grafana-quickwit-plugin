@@ -2,12 +2,13 @@ import {DataQuery, DataSourceJsonData} from '@grafana/data';
 
 export interface MyQuery extends DataQuery {
   query?: string;
-  sortByField: string;
+  sort_by_field: string;
+  aggregation?: any;
 }
 
 export const defaultQuery: Partial<MyQuery> = {
   query: '',
-  sortByField: 'timestamp',
+  sort_by_field: 'timestamp',
 };
 
 /**
