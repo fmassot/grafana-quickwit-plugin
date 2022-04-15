@@ -14,8 +14,7 @@ export class DataSource extends DataSourceApi<MyQuery, MyDataSourceOptions> {
   constructor(instanceSettings: DataSourceInstanceSettings<MyDataSourceOptions>) {
     super(instanceSettings);
 
-    this.index = instanceSettings.jsonData.index || 1000.0;
-    console.log(instanceSettings);
+    this.index = instanceSettings.jsonData.index;
   }
 
   async query(options: DataQueryRequest<MyQuery>): Promise<DataQueryResponse> {
@@ -29,7 +28,7 @@ export class DataSource extends DataSourceApi<MyQuery, MyDataSourceOptions> {
             ],
           });
 
-          console.log('toto', response);
+          console.log('response', response);
           response.data.hits.forEach((point: any) => {
             frame.appendRow([point.timestamp[0], point.tenant_id[0]]);
           });
@@ -47,7 +46,7 @@ export class DataSource extends DataSourceApi<MyQuery, MyDataSourceOptions> {
     if (query.aggregations != '') {
       data.aggregations = JSON.parse(query.aggregations);
     }
-    console.log(data);
+    console.log('query', data);
 
     const result = await getBackendSrv().datasourceRequest({
       method: 'POST',
