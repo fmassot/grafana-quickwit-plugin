@@ -2,7 +2,7 @@
   "$schema": "https://raw.githubusercontent.com/grafana/grafana/master/docs/sources/developers/plugins/plugin.schema.json",
   "type": "datasource",
   "name": "quickwit-plugin",
-  "id": "quickwit-quickwit-plugin",
+  "id": "quickwit-plugin-datasource",
   "metrics": true,
   "info": {
     "description": "Enables quickwit as datasource for grafana",
@@ -10,7 +10,9 @@
       "name": "Jules Vautier",
       "url": "https://quickwit.io/"
     },
-    "keywords": ["quickwit"],
+    "keywords": [
+      "quickwit"
+    ],
     "logos": {
       "small": "img/logo.svg",
       "large": "img/logo.svg"

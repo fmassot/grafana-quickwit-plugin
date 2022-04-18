@@ -7,7 +7,7 @@ export interface MyQuery extends DataQuery {
 }
 
 export const defaultQuery: Partial<MyQuery> = {
-  query: '',
+  query: '*',
   sort_by_field: 'timestamp',
 };
 

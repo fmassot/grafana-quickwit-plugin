@@ -41,10 +41,11 @@ export class DataSource extends DataSourceApi<MyQuery, MyDataSourceOptions> {
   }
 
   async doRequest(query: MyQuery) {
-    let data: any = {query: query.query, sort_by_field: query.sort_by_field, max_hits: 1};
-    data = Object.fromEntries(Object.entries(data).filter(([_, v]) => v != null && v != ''));
-    if (query.aggregations != '') {
+    let data: any = {query: query.query, sort_by_field: query.sort_by_field, max_hits: 1000};
+    data = Object.fromEntries(Object.entries(data).filter(([_, v]) => v != null));
+    if (query.aggregations && query.aggregations != '') {
       data.aggregations = JSON.parse(query.aggregations);
+      data.max_hits = 0;
     }
     console.log('query', data);
 

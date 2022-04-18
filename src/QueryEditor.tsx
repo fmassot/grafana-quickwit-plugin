@@ -58,7 +58,13 @@ export class QueryEditor extends PureComponent<Props> {
 
     return (
         <div className="gf-form">
-          <FormField labelWidth={8} value={query || ''} onChange={this.onQueryChange} label="Query text"/>
+          <FormField
+              labelWidth={8}
+              value={query || ''}
+              onChange={this.onQueryChange}
+              label="Query text"
+              placeholder="Lucene Query"
+          />
           <FormField labelWidth={7} value={sort_by_field || ''} onChange={this.onSortByFieldChange} label="Sort by"/>
           <FormField
               labelWidth={7}
