@@ -75,7 +75,7 @@ However, you can't just copy and paste it. It can be found in the official Grafa
 architecture than a custom plugin. For example, the Go backend is missing and there are many dependencies with other
 parts of the Grafana code that we don't want to copy and paste.
 
-One solution would be to adapt the Quickwit endpoints to match those from Elasticsearch. Knowing that the answers are
+**A solution** would be to adapt Quickwit endpoints to match those from Elasticsearch. Knowing that the answers are
 already formatted like those of ES, we only need to adapt our endpoints to make the ES plugin compatible with Quickwit.
 
 Here are the important parts of
