@@ -8,13 +8,15 @@ import {
 } from '@grafana/data';
 import {getBackendSrv} from '@grafana/runtime';
 
-import {MyDataSourceOptions, MyQuery} from './types';
+import {defaultQuery, MyDataSourceOptions, MyQuery} from './types';
+import defaults from 'lodash/defaults';
 
 export class DataSource extends DataSourceApi<MyQuery, MyDataSourceOptions> {
   constructor(instanceSettings: DataSourceInstanceSettings<MyDataSourceOptions>) {
     super(instanceSettings);
 
     this.index = instanceSettings.jsonData.index;
+    this.url = instanceSettings.jsonData.url;
   }
 
   async query(options: DataQueryRequest<MyQuery>): Promise<DataQueryResponse> {
@@ -41,6 +43,7 @@ export class DataSource extends DataSourceApi<MyQuery, MyDataSourceOptions> {
   }
 
   async doRequest(query: MyQuery) {
+    query = defaults(query, defaultQuery);
     let data: any = {query: query.query, sort_by_field: query.sort_by_field, max_hits: 1000};
     data = Object.fromEntries(Object.entries(data).filter(([_, v]) => v != null));
     if (query.aggregations && query.aggregations != '') {
@@ -51,7 +54,7 @@ export class DataSource extends DataSourceApi<MyQuery, MyDataSourceOptions> {
 
     const result = await getBackendSrv().datasourceRequest({
       method: 'POST',
-      url: `http://127.0.0.1:7280/api/v1/${this.index}/search`,
+      url: `${this.url}/api/v1/${this.index}/search`,
       data: data,
       headers: {'Content-type': 'application/json'},
     });

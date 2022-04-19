@@ -1,7 +1,8 @@
 import React, {ChangeEvent, PureComponent} from 'react';
 import {LegacyForms} from '@grafana/ui';
 import {DataSourcePluginOptionsEditorProps} from '@grafana/data';
-import {MyDataSourceOptions, MySecureJsonData} from './types';
+import {defaultDataSourceOptions, MyDataSourceOptions, MySecureJsonData} from './types';
+import defaults from 'lodash/defaults';
 
 const {SecretFormField, FormField} = LegacyForms;
 
@@ -12,6 +13,16 @@ interface State {
 }
 
 export class ConfigEditor extends PureComponent<Props, State> {
+  onURLChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const {onOptionsChange, options} = this.props;
+    const jsonData = {
+      ...options.jsonData,
+      url: event.target.value,
+    };
+    jsonData.url = jsonData.url.replace(/\/$/, '');
+    onOptionsChange({...options, jsonData});
+  };
+
   onIndexChange = (event: ChangeEvent<HTMLInputElement>) => {
     const {onOptionsChange, options} = this.props;
     const jsonData = {
@@ -48,21 +59,32 @@ export class ConfigEditor extends PureComponent<Props, State> {
   };
 
   render() {
-    const { options } = this.props;
-    const { jsonData, secureJsonFields } = options;
+    const {options} = this.props;
+    const jsonData = defaults(options.jsonData, defaultDataSourceOptions);
+    const secureJsonFields = options.secureJsonFields;
     const secureJsonData = (options.secureJsonData || {}) as MySecureJsonData;
 
     return (
-      <div className="gf-form-group">
-        <div className="gf-form">
-          <FormField
-              label="Index"
-              labelWidth={6}
-              inputWidth={100}
-              onChange={this.onIndexChange}
-              value={jsonData.index || ''}
-          />
-        </div>
+        <div className="gf-form-group">
+          <div className="gf-form">
+            <FormField
+                label="URL"
+                labelWidth={3}
+                inputWidth={300}
+                onChange={this.onURLChange}
+                value={jsonData.url || ''}
+            />
+          </div>
+
+          <div className="gf-form">
+            <FormField
+                label="Index"
+                labelWidth={6}
+                inputWidth={100}
+                onChange={this.onIndexChange}
+                value={jsonData.index || ''}
+            />
+          </div>
 
         <div className="gf-form-inline">
           <div className="gf-form">
