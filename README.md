@@ -3,7 +3,8 @@
 ## What is Grafana Data Source Plugin?
 
 Grafana supports a wide range of data sources, including Prometheus, MySQL, and even Datadog. Here's a plugin to use
-Quickwit as datasource.
+Quickwit as datasource. This is only a proof of concept. This plugin allows you to display simple timeserie queries on a
+Grafana panel.
 
 ## Getting started
 
@@ -43,8 +44,19 @@ Quickwit as datasource.
      ```
 
 3. Configure Grafana in the browser
-
-## TODO
+    - Since this plugin is a [simple datasource plugin](https://grafana.com/tutorials/build-a-data-source-plugin/),
+      not a [backend datasource plugin](https://grafana.com/tutorials/build-a-data-source-backend-plugin/), request are
+      made by the browser.
+      It leads to CORS errors. To be able to try this plugin, please disable these specific checks on your browser.
+      Run this command to launch a session with CORS check disabled:
+      ```bash
+      google-chrome --disable-web-security --user-data-dir=~/.config/google-chrome/Default/
+      ```
+    - Browse Grafana `http://localhost:3000/`
+    - Go to `Configuration` -> `Data sources` -> `Add data source` -> Look for `quickwit-plugin`.
+    - Here you can specify the URL of the Quickwit source and the index you want to use.
+    - Now, you can finally create a panel using Quickwit as data source: Click `+` on the left sidebar -> `Create`
+      -> `Add a new panel`
 
 ## Learn more
 
@@ -55,10 +67,3 @@ Quickwit as datasource.
 - [Grafana UI Library](https://developers.grafana.com/ui) - UI components to help you build interfaces using Grafana
   Design System
 
-sudo systemctl edit grafana
-[Service]
-ProtectHome=false
-
-also grafana.ini:
-app_mode = development
-plugins = /home/jules/projects/rust/quickwit-grafana-plugin/
