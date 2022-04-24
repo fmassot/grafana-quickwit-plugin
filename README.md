@@ -83,6 +83,7 @@ the [Elasticsearch plugin code](https://github.com/grafana/grafana/tree/main/pub
 
 - [The main search function is `query()` in `database.ts`](https://github.com/grafana/grafana/blob/main/public/app/plugins/datasource/elasticsearch/datasource.ts#L624)
 - [The search is done using the `/_msearch` endpoint](https://github.com/grafana/grafana/blob/main/public/app/plugins/datasource/elasticsearch/datasource.ts#L832-L844)
+- The `/_msearch` endpoint contains the list of queries. A query is made of two parts: filter and aggregation. Aggregation already supported in Quickwit but the filtering part needs to be added. Filtering is made with bool statements on timestamp ranges, on `query_string`, on `match_phrase` and `regexp`. The code building the json filter can be found [here]. (https://github.com/grafana/grafana/blob/ea52663dd924609d85b0ea324fa919ca5f0eaa84/public/app/plugins/datasource/elasticsearch/query_builder.ts#L171).   
 - [The Query structure](https://github.com/grafana/grafana/blob/main/public/app/plugins/datasource/elasticsearch/types.ts#L67)
 - [The mapping of the attributes](https://github.com/grafana/grafana/blob/main/public/app/plugins/datasource/elasticsearch/datasource.ts#L716-L730)
   returned by the index in order to offer them in the Query editor is done. There's a call to the
